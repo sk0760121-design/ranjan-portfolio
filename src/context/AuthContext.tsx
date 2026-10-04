@@ -9,6 +9,7 @@ interface AuthContextType {
   loading: boolean;
   authError: string | null;
   signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signUp: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   signOutAllSessions: () => Promise<void>;
   isConfigured: boolean;
@@ -44,7 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.error('Supabase getSession error:', e);
         }
 
-        // Listen to auth changes
+        // Listen to auth state transitions
         const { data: authListener } = supabase.auth.onAuthStateChange(
           async (_event, session) => {
             if (!mounted) return;
@@ -65,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           authListener?.subscription.unsubscribe();
         };
       } else {
-        // Fallback persistent session check for standalone / preview mode
+        // Fallback persistent session check for standalone mode
         const saved = localStorage.getItem(LOCAL_ADMIN_KEY);
         if (saved) {
           try {
@@ -94,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (isSupabaseConfigured && supabase) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email,
+          email: email.trim(),
           password,
         });
 
@@ -107,7 +108,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (data.user) {
           const admin = await CMSService.checkAdminStatus(data.user);
           if (!admin) {
-            // Not an admin role!
             await supabase.auth.signOut();
             setAuthError('ACCESS DENIED: Your account does not have administrator privileges.');
             setLoading(false);
@@ -132,7 +132,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     // Local / Standalone mode validation
-    // Allows owner sk0760121@gmail.com, ranjan.cinematicx@gmail.com or admin@ranjankumar.com
     const cleanEmail = email.trim().toLowerCase();
     const authorizedEmails = [
       'sk0760121@gmail.com',
@@ -147,7 +146,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: 'ACCESS DENIED: Email not authorized as administrator.' };
     }
 
-    // Passwords must be at least 6 characters in standalone preview
     if (!password || password.length < 6) {
       setAuthError('Password must be at least 6 characters.');
       setLoading(false);
@@ -168,6 +166,68 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAdmin(true);
     setLoading(false);
     return { success: true };
+  };
+
+  const signUp = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    setAuthError(null);
+    setLoading(true);
+
+    const cleanEmail = email.trim().toLowerCase();
+    const authorizedEmails = [
+      'sk0760121@gmail.com',
+      'ranjan.cinematicx@gmail.com',
+      'admin@ranjankumar.com',
+    ];
+
+    if (!authorizedEmails.includes(cleanEmail)) {
+      setAuthError('ACCESS DENIED: Only authorized portfolio owner emails can register as admin.');
+      setLoading(false);
+      return { success: false, error: 'ACCESS DENIED: Only authorized portfolio owner emails can register as admin.' };
+    }
+
+    if (password.length < 6) {
+      setAuthError('Password must be at least 6 characters.');
+      setLoading(false);
+      return { success: false, error: 'Password must be at least 6 characters.' };
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email: cleanEmail,
+          password,
+        });
+
+        if (error) {
+          setAuthError(error.message);
+          setLoading(false);
+          return { success: false, error: error.message };
+        }
+
+        if (data.user) {
+          // Ensure entry in admin_users
+          try {
+            await supabase.from('admin_users').upsert({
+              user_id: data.user.id,
+              email: cleanEmail,
+              role: 'admin',
+            });
+          } catch (e) {}
+
+          setUser(data.user);
+          setSession(data.session);
+          setIsAdmin(true);
+          setLoading(false);
+          return { success: true };
+        }
+      } catch (err: any) {
+        setAuthError(err.message || 'Registration failed');
+        setLoading(false);
+        return { success: false, error: err.message };
+      }
+    }
+
+    return signIn(email, password);
   };
 
   const signOut = async () => {
@@ -203,6 +263,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         authError,
         signIn,
+        signUp,
         signOut,
         signOutAllSessions,
         isConfigured: isSupabaseConfigured,

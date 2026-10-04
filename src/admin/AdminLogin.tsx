@@ -1,25 +1,42 @@
 import React, { useState } from 'react';
-import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Info } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Info, Database, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const AdminLogin: React.FC = () => {
-  const { signIn, loading, authError, isConfigured } = useAuth();
-  const [email, setEmail] = useState('');
+  const { signIn, signUp, loading, authError, isConfigured } = useAuth();
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [email, setEmail] = useState('sk0760121@gmail.com');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
+  const [localSuccess, setLocalSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
+    setLocalSuccess(null);
 
     if (!email || !password) {
       setLocalError('Please enter both email and password.');
       return;
     }
 
-    const res = await signIn(email, password);
-    if (!res.success && res.error) {
-      setLocalError(res.error);
+    if (password.length < 6) {
+      setLocalError('Password must be at least 6 characters.');
+      return;
+    }
+
+    if (isRegisterMode) {
+      const res = await signUp(email, password);
+      if (!res.success && res.error) {
+        setLocalError(res.error);
+      } else {
+        setLocalSuccess('Admin account created! Entering dashboard...');
+      }
+    } else {
+      const res = await signIn(email, password);
+      if (!res.success && res.error) {
+        setLocalError(res.error);
+      }
     }
   };
 
@@ -30,7 +47,7 @@ export const AdminLogin: React.FC = () => {
 
       {/* Login Card */}
       <div className="w-full max-w-md bg-[#151515] border border-[#262626] rounded-xl p-8 relative z-10 shadow-2xl">
-        <div className="flex flex-col items-center text-center mb-8">
+        <div className="flex flex-col items-center text-center mb-6">
           <div className="w-14 h-14 rounded-full bg-[#FF2027]/10 border border-[#FF2027]/20 flex items-center justify-center text-[#FF2027] mb-4 shadow-lg shadow-[#FF2027]/10">
             <Lock className="w-6 h-6" />
           </div>
@@ -44,6 +61,39 @@ export const AdminLogin: React.FC = () => {
           <p className="mt-1 text-xs uppercase font-mono tracking-widest text-[#8A8A8A]">
             PORTFOLIO CONTROL PANEL
           </p>
+
+          <div className="mt-3 flex items-center gap-2 px-3 py-1 rounded bg-[#0A0A0A] border border-[#262626] text-[11px] font-mono text-emerald-400">
+            <Database className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Supabase Cloud Connected</span>
+          </div>
+        </div>
+
+        {/* Mode selector */}
+        <div className="flex rounded bg-[#0A0A0A] p-1 border border-[#262626] mb-6">
+          <button
+            type="button"
+            onClick={() => {
+              setIsRegisterMode(false);
+              setLocalError(null);
+            }}
+            className={`flex-1 py-1.5 rounded text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
+              !isRegisterMode ? 'bg-[#FF2027] text-white' : 'text-[#8A8A8A] hover:text-white'
+            }`}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setIsRegisterMode(true);
+              setLocalError(null);
+            }}
+            className={`flex-1 py-1.5 rounded text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
+              isRegisterMode ? 'bg-[#FF2027] text-white' : 'text-[#8A8A8A] hover:text-white'
+            }`}
+          >
+            Register Admin
+          </button>
         </div>
 
         {/* Status / Error alerts */}
@@ -51,9 +101,16 @@ export const AdminLogin: React.FC = () => {
           <div className="mb-6 p-4 rounded-md bg-red-950/40 border border-red-800 text-red-200 text-xs flex items-start gap-3">
             <AlertCircle className="w-4 h-4 flex-shrink-0 text-[#FF2027] mt-0.5" />
             <div>
-              <span className="font-bold block uppercase mb-0.5">Authorization Error</span>
+              <span className="font-bold block uppercase mb-0.5">Authorization Notice</span>
               <span>{localError || authError}</span>
             </div>
+          </div>
+        )}
+
+        {localSuccess && (
+          <div className="mb-6 p-4 rounded-md bg-emerald-950/40 border border-emerald-800 text-emerald-200 text-xs flex items-start gap-3">
+            <ShieldCheck className="w-4 h-4 flex-shrink-0 text-emerald-400 mt-0.5" />
+            <span>{localSuccess}</span>
           </div>
         )}
 
@@ -99,6 +156,11 @@ export const AdminLogin: React.FC = () => {
           >
             {loading ? (
               <span>VERIFYING SESSION...</span>
+            ) : isRegisterMode ? (
+              <>
+                <span>CREATE & ENTER DASHBOARD</span>
+                <UserPlus className="w-4 h-4" />
+              </>
             ) : (
               <>
                 <span>ENTER DASHBOARD</span>
@@ -116,19 +178,17 @@ export const AdminLogin: React.FC = () => {
           </div>
 
           <p className="leading-relaxed">
-            Your login token is preserved across browser sessions. You will not need to sign in again on this device until you explicitly log out.
+            Your login token is preserved in the browser so you don't need to re-authenticate on every visit.
           </p>
 
-          {!isConfigured && (
-            <div className="p-3 bg-[#0A0A0A] border border-[#262626] rounded text-[11px] text-[#8A8A8A] space-y-1">
-              <div className="flex items-center gap-1.5 text-white font-semibold">
-                <Info className="w-3.5 h-3.5 text-[#FF2027]" />
-                <span>Default Authorized Account:</span>
-              </div>
-              <p>Email: <strong className="text-white">sk0760121@gmail.com</strong> or <strong className="text-white">ranjan.cinematicx@gmail.com</strong></p>
-              <p>Password: <strong className="text-white">editor2026</strong> (minimum 6 characters)</p>
+          <div className="p-3 bg-[#0A0A0A] border border-[#262626] rounded text-[11px] text-[#8A8A8A] space-y-1">
+            <div className="flex items-center gap-1.5 text-white font-semibold">
+              <Info className="w-3.5 h-3.5 text-[#FF2027]" />
+              <span>Owner Account:</span>
             </div>
-          )}
+            <p className="text-white font-mono">sk0760121@gmail.com</p>
+            <p>If you have not created your password in Supabase yet, click <strong>Register Admin</strong> above.</p>
+          </div>
         </div>
       </div>
     </div>

@@ -116,6 +116,34 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   );
   const [revisions, setRevisions] = useState<RevisionSnapshot[]>(() => CMSService.getRevisions());
 
+  // Fetch live published state from Supabase on mount
+  useEffect(() => {
+    let isMounted = true;
+    async function loadRemote() {
+      const remote = await CMSService.fetchAllFromSupabase();
+      if (!isMounted) return;
+      if (remote.settings) setSettings(remote.settings);
+      if (remote.sections && Object.keys(remote.sections).length > 0) setSections(remote.sections);
+      if (remote.projects && remote.projects.length > 0) setProjects(remote.projects);
+      if (remote.services && remote.services.length > 0) setServices(remote.services);
+      if (remote.skills && remote.skills.length > 0) setSkills(remote.skills);
+      if (remote.software && remote.software.length > 0) setSoftware(remote.software);
+      if (remote.processSteps && remote.processSteps.length > 0) setProcessSteps(remote.processSteps);
+      if (remote.beforeAfter && remote.beforeAfter.length > 0) setBeforeAfter(remote.beforeAfter);
+      if (remote.testimonials && remote.testimonials.length > 0) setTestimonials(remote.testimonials);
+      if (remote.socialLinks && remote.socialLinks.length > 0) setSocialLinks(remote.socialLinks);
+      if (remote.navItems && remote.navItems.length > 0) setNavItems(remote.navItems);
+      if (remote.mediaAssets && remote.mediaAssets.length > 0) setMediaAssets(remote.mediaAssets);
+      if (remote.contactMessages && remote.contactMessages.length > 0) setContactMessages(remote.contactMessages);
+      if (remote.seoSettings) setSEOSettings(remote.seoSettings);
+      if (remote.revisions && remote.revisions.length > 0) setRevisions(remote.revisions);
+    }
+    loadRemote();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // Reload data when admin status or preview mode switches
   useEffect(() => {
     if (isAdmin) {
@@ -200,6 +228,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const deleteProject = (id: string) => {
     const updated = projects.filter((p) => p.id !== id);
     handleSaveProjects(updated);
+    CMSService.deleteProjectRemote(id);
   };
 
   const handleSaveServices = (items: ServiceItem[]) => {
@@ -258,11 +287,14 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addMedia = (asset: MediaAsset) => {
     const updated = [asset, ...mediaAssets];
     handleSaveMedia(updated);
+    CMSService.addMediaAsset(asset);
   };
 
   const deleteMedia = (id: string) => {
+    const asset = mediaAssets.find((m) => m.id === id);
     const updated = mediaAssets.filter((m) => m.id !== id);
     handleSaveMedia(updated);
+    CMSService.deleteMediaAsset(id, asset?.storage_path);
   };
 
   const handleUpdateSEO = (seo: SEOSettings) => {
@@ -277,12 +309,14 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
     setContactMessages(updated);
     CMSService.saveContactMessages(updated);
+    CMSService.updateContactMessageStatus(id, 'read');
   };
 
   const deleteMessage = (id: string) => {
     const updated = contactMessages.filter((m) => m.id !== id);
     setContactMessages(updated);
     CMSService.saveContactMessages(updated);
+    CMSService.deleteContactMessageRemote(id);
   };
 
   const submitContactForm = async (msg: {
@@ -299,8 +333,8 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return res;
   };
 
-  const publishChanges = () => {
-    const { timestamp } = CMSService.publishChanges();
+  const publishChanges = async () => {
+    const { timestamp } = await CMSService.publishChanges();
     setLastPublished(timestamp);
     setHasUnpublishedChanges(false);
     setRevisions(CMSService.getRevisions());
