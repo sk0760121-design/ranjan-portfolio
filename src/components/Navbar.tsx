@@ -36,12 +36,12 @@ export const Navbar: React.FC = () => {
         </a>
 
         {/* Desktop Nav Items */}
-        <nav className="hidden md:flex items-center space-x-9">
+        <nav className="hidden md:flex items-center space-x-9 font-navigation">
           {enabledItems.map((item) => (
             <a
               key={item.id}
               href={item.href}
-              className="text-xs uppercase tracking-widest text-[#8A8A8A] hover:text-white transition-colors font-medium relative group"
+              className="nav-link-text tracking-widest text-[#8A8A8A] hover:text-white transition-colors relative group"
             >
               {item.label}
               <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#FF2027] transition-all duration-200 group-hover:w-full" />
@@ -53,7 +53,7 @@ export const Navbar: React.FC = () => {
         <div className="hidden md:flex items-center space-x-4">
           <a
             href="#contact"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded text-xs font-semibold uppercase tracking-wider bg-[#FF2027] text-white hover:bg-[#E0181F] transition-all duration-200 shadow-lg shadow-[#FF2027]/20"
+            className="font-button inline-flex items-center gap-2 px-5 py-2.5 rounded btn-text bg-[#FF2027] text-white hover:bg-[#E0181F] transition-all duration-200 shadow-lg shadow-[#FF2027]/20"
           >
             LET'S TALK
             <ArrowUpRight className="w-4 h-4" />

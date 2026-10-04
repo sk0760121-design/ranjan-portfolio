@@ -55,13 +55,7 @@ export const SelectedWork: React.FC<SelectedWorkProps> = ({ onSelectProject }) =
                 PORTFOLIO
               </span>
             </div>
-            <h2
-              className="font-black text-white leading-[0.98] tracking-tighter uppercase whitespace-pre-line"
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: `clamp(${theme.typography.h2.fontSizeMobile}, 5vw, ${theme.typography.h2.fontSizeDesktop})`,
-              }}
-            >
+            <h2 className="font-section-heading section-heading-text text-white whitespace-pre-line">
               {content.heading || 'SELECTED\nWORK'}
             </h2>
           </div>

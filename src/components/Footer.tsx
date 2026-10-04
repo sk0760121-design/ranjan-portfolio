@@ -28,7 +28,7 @@ export const Footer: React.FC = () => {
           <p className="mt-2 text-xs uppercase tracking-widest text-[#8A8A8A] font-mono">
             {content.tagline || 'Video Editor · Filmmaker · Storyteller'}
           </p>
-          <p className="mt-6 text-xs text-[#8A8A8A]">
+          <p className="font-footer mt-6 text-xs text-[#8A8A8A]">
             {content.copyright || '© 2026 Ranjan Kumar. All rights reserved.'}
           </p>
         </div>

@@ -86,16 +86,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelect }) =
       <div className="p-6 flex flex-col flex-grow justify-between">
         <div>
           <div className="flex items-start justify-between gap-4">
-            <h3
-              className="text-xl font-bold uppercase tracking-tight text-white group-hover:text-[#FF2027] transition-colors leading-tight line-clamp-1"
-              style={{ fontFamily: 'var(--font-heading)' }}
-            >
+            <h3 className="font-project-title project-title-text text-white group-hover:text-[#FF2027] transition-colors line-clamp-1">
               {project.title}
             </h3>
             <ArrowUpRight className="w-5 h-5 text-[#8A8A8A] group-hover:text-[#FF2027] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all flex-shrink-0" />
           </div>
 
-          <p className="mt-2 text-sm text-[#8A8A8A] line-clamp-2 leading-relaxed">
+          <p className="font-project-desc project-desc-text mt-2 text-[#8A8A8A] line-clamp-2">
             {project.short_description}
           </p>
         </div>

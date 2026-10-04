@@ -5,6 +5,7 @@ import { PortfolioHome } from './pages/PortfolioHome';
 import { ProjectDetail } from './pages/ProjectDetail';
 import { AdminLayout } from './admin/AdminLayout';
 import { AdminLogin } from './admin/AdminLogin';
+import { DynamicTypography } from './components/DynamicTypography';
 
 const AppContent: React.FC = () => {
   const { user, isAdmin, loading } = useAuth();
@@ -81,6 +82,7 @@ export default function App() {
   return (
     <AuthProvider>
       <CMSProvider>
+        <DynamicTypography />
         <AppContent />
       </CMSProvider>
     </AuthProvider>

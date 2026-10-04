@@ -68,13 +68,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenShowreel }) => {
         </div>
 
         {/* Hero Title */}
-        <h1
-          className="font-black text-white leading-[0.98] tracking-tighter uppercase max-w-5xl"
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: `clamp(${theme.typography.h1.fontSizeMobile}, 7vw, ${theme.typography.h1.fontSizeDesktop})`,
-          }}
-        >
+        <h1 className="font-hero-heading hero-title-text text-white max-w-5xl">
           {content.headingLine1 || 'I EDIT'}{' '}
           <span className="block">{content.headingLine2 || 'STORIES THAT'}</span>
           <span className="block">
@@ -86,22 +80,17 @@ export const Hero: React.FC<HeroProps> = ({ onOpenShowreel }) => {
         </h1>
 
         {/* Supporting Copy */}
-        <p
-          className="mt-8 text-[#8A8A8A] max-w-xl text-base md:text-lg leading-relaxed font-normal"
-          style={{
-            fontSize: `clamp(${theme.typography.body.fontSizeMobile}, 1.8vw, ${theme.typography.body.fontSizeDesktop})`,
-          }}
-        >
+        <p className="font-hero-subtitle hero-subtitle-text mt-8 text-[#8A8A8A] max-w-xl">
           {content.supportingCopy ||
             "I'm Ranjan Kumar, a video editor focused on cinematic storytelling, engaging short-form content and polished visual experiences."}
         </p>
 
         {/* CTA Buttons */}
-        <div className="mt-10 flex flex-wrap items-center gap-4 sm:gap-6">
+        <div className="mt-10 flex flex-wrap items-center gap-4 sm:gap-6 font-button">
           <button
             onClick={onOpenShowreel}
             data-cursor="PLAY"
-            className="inline-flex items-center gap-3 px-7 py-4 rounded text-xs md:text-sm font-bold uppercase tracking-wider bg-[#FF2027] text-white hover:bg-[#E0181F] transition-all duration-300 shadow-xl shadow-[#FF2027]/25 hover:scale-[1.02] cursor-pointer"
+            className="btn-text inline-flex items-center gap-3 px-7 py-4 rounded bg-[#FF2027] text-white hover:bg-[#E0181F] transition-all duration-300 shadow-xl shadow-[#FF2027]/25 hover:scale-[1.02] cursor-pointer"
           >
             <Play className="w-4 h-4 fill-white" />
             <span>{content.primaryButtonText || 'WATCH SHOWREEL'}</span>
@@ -110,7 +99,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenShowreel }) => {
 
           <a
             href={content.secondaryButtonUrl || '#work'}
-            className="inline-flex items-center gap-2 px-6 py-4 rounded text-xs md:text-sm font-semibold uppercase tracking-wider text-white border border-[#262626] bg-[#0A0A0A]/40 backdrop-blur hover:border-[#FF2027] hover:bg-[#151515] transition-all duration-300"
+            className="btn-text inline-flex items-center gap-2 px-6 py-4 rounded text-white border border-[#262626] bg-[#0A0A0A]/40 backdrop-blur hover:border-[#FF2027] hover:bg-[#151515] transition-all duration-300"
           >
             <span>{content.secondaryButtonText || 'VIEW MY WORK'}</span>
             <ArrowDown className="w-4 h-4 text-[#8A8A8A]" />

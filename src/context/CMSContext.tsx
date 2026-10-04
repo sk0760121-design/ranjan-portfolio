@@ -15,6 +15,7 @@ import {
   ContactMessage,
   SEOSettings,
   RevisionSnapshot,
+  CustomFont,
 } from '../types/database';
 import { CMSService, isSupabaseConfigured, supabase } from '../lib/supabase';
 import { useAuth } from './AuthContext';
@@ -33,6 +34,7 @@ interface CMSContextType {
   socialLinks: SocialLink[];
   navItems: NavigationItem[];
   mediaAssets: MediaAsset[];
+  customFonts: CustomFont[];
   contactMessages: ContactMessage[];
   seoSettings: SEOSettings;
   revisions: RevisionSnapshot[];
@@ -62,6 +64,10 @@ interface CMSContextType {
   saveMedia: (media: MediaAsset[]) => void;
   addMedia: (media: MediaAsset) => void;
   deleteMedia: (id: string) => void;
+  addCustomFont: (font: CustomFont) => void;
+  updateCustomFont: (id: string, updates: Partial<CustomFont>) => void;
+  deleteCustomFont: (id: string) => void;
+  toggleCustomFontActive: (id: string) => void;
   updateSEO: (seo: SEOSettings) => void;
   markMessageRead: (id: string) => void;
   deleteMessage: (id: string) => void;
@@ -110,6 +116,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(() => CMSService.getSocialLinks());
   const [navItems, setNavItems] = useState<NavigationItem[]>(() => CMSService.getNavigationItems());
   const [mediaAssets, setMediaAssets] = useState<MediaAsset[]>(() => CMSService.getMedia());
+  const [customFonts, setCustomFonts] = useState<CustomFont[]>(() => CMSService.getCustomFonts());
   const [contactMessages, setContactMessages] = useState<ContactMessage[]>(() => CMSService.getContactMessages());
   const [seoSettings, setSEOSettings] = useState<SEOSettings>(() =>
     isAdmin ? CMSService.getDraftSEO() : CMSService.getPublishedSEO()
@@ -134,6 +141,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (remote.socialLinks && remote.socialLinks.length > 0) setSocialLinks(remote.socialLinks);
       if (remote.navItems && remote.navItems.length > 0) setNavItems(remote.navItems);
       if (remote.mediaAssets && remote.mediaAssets.length > 0) setMediaAssets(remote.mediaAssets);
+      if (remote.customFonts && remote.customFonts.length > 0) setCustomFonts(remote.customFonts);
       if (remote.contactMessages && remote.contactMessages.length > 0) setContactMessages(remote.contactMessages);
       if (remote.seoSettings) setSEOSettings(remote.seoSettings);
       if (remote.revisions && remote.revisions.length > 0) setRevisions(remote.revisions);
@@ -297,6 +305,36 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     CMSService.deleteMediaAsset(id, asset?.storage_path);
   };
 
+  const handleSaveCustomFonts = (fonts: CustomFont[]) => {
+    setCustomFonts(fonts);
+    CMSService.saveCustomFonts(fonts);
+  };
+
+  const addCustomFont = (font: CustomFont) => {
+    const updated = [font, ...customFonts];
+    handleSaveCustomFonts(updated);
+    CMSService.addCustomFontRemote(font);
+  };
+
+  const updateCustomFont = (id: string, updates: Partial<CustomFont>) => {
+    const updated = customFonts.map((f) => (f.id === id ? { ...f, ...updates } : f));
+    handleSaveCustomFonts(updated);
+    CMSService.updateCustomFontRemote(id, updates);
+  };
+
+  const deleteCustomFont = (id: string) => {
+    const font = customFonts.find((f) => f.id === id);
+    const updated = customFonts.filter((f) => f.id !== id);
+    handleSaveCustomFonts(updated);
+    CMSService.deleteCustomFontRemote(id, font?.storage_path);
+  };
+
+  const toggleCustomFontActive = (id: string) => {
+    const font = customFonts.find((f) => f.id === id);
+    if (!font) return;
+    updateCustomFont(id, { active: !font.active });
+  };
+
   const handleUpdateSEO = (seo: SEOSettings) => {
     setSEOSettings(seo);
     CMSService.saveDraftSEO(seo);
@@ -406,6 +444,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         socialLinks,
         navItems,
         mediaAssets,
+        customFonts,
         contactMessages,
         seoSettings,
         revisions,
@@ -431,6 +470,10 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         saveMedia: handleSaveMedia,
         addMedia,
         deleteMedia,
+        addCustomFont,
+        updateCustomFont,
+        deleteCustomFont,
+        toggleCustomFontActive,
         updateSEO: handleUpdateSEO,
         markMessageRead,
         deleteMessage,

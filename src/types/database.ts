@@ -29,7 +29,22 @@ export interface TypographyRule {
   textTransform?: 'none' | 'uppercase' | 'capitalize' | 'lowercase';
 }
 
+export interface CustomFont {
+  id: string;
+  name: string;
+  family_name: string;
+  file_url: string;
+  format: 'woff2' | 'woff' | 'ttf' | 'otf';
+  weight: string;
+  style: 'normal' | 'italic';
+  active: boolean;
+  storage_path?: string;
+  size_bytes?: number;
+  created_at: string;
+}
+
 export interface SiteTypography {
+  // Baseline typography rules
   h1: TypographyRule;
   h2: TypographyRule;
   h3: TypographyRule;
@@ -38,6 +53,17 @@ export interface SiteTypography {
   small: TypographyRule;
   button: TypographyRule;
   label: TypographyRule;
+
+  // Specific granular controls requested
+  globalBody?: TypographyRule;
+  heading?: TypographyRule;
+  heroHeading?: TypographyRule;
+  heroSubtitle?: TypographyRule;
+  navigation?: TypographyRule;
+  sectionHeading?: TypographyRule;
+  projectTitle?: TypographyRule;
+  projectDescription?: TypographyRule;
+  footer?: TypographyRule;
 }
 
 export interface SiteDesign {
@@ -190,13 +216,19 @@ export interface NavigationItem {
 export interface MediaAsset {
   id: string;
   filename: string;
-  file_type: 'image' | 'video' | 'audio' | 'document';
+  file_type: 'image' | 'video' | 'audio' | 'document' | 'font' | 'logo' | 'icon' | 'other';
   mime_type: string;
   size_bytes: number;
   url: string;
   storage_path: string;
   alt_text?: string;
+  category?: 'Videos' | 'Images' | 'Fonts' | 'Logos' | 'Icons' | 'Documents' | 'Other';
+  resolution?: string; // e.g. "3840x2160 (4K UHD)", "1920x1080 (1080p)"
+  duration?: number; // duration in seconds
+  width?: number;
+  height?: number;
   created_at: string;
+  updated_at?: string;
 }
 
 export interface ContactMessage {

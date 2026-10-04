@@ -15,6 +15,7 @@ import {
   ContactMessage,
   SEOSettings,
   RevisionSnapshot,
+  CustomFont,
 } from '../types/database';
 import {
   DEFAULT_SITE_SETTINGS,
@@ -74,6 +75,7 @@ const STORAGE_KEYS = {
   SOCIAL_LINKS: 'ranjan_cms_social_links',
   NAV_ITEMS: 'ranjan_cms_nav_items',
   MEDIA: 'ranjan_cms_media',
+  CUSTOM_FONTS: 'ranjan_cms_custom_fonts',
   MESSAGES: 'ranjan_cms_messages',
   SEO_DRAFT: 'ranjan_cms_seo_draft',
   SEO_PUB: 'ranjan_cms_seo_pub',
@@ -145,6 +147,7 @@ export class CMSService {
     socialLinks?: SocialLink[];
     navItems?: NavigationItem[];
     mediaAssets?: MediaAsset[];
+    customFonts?: CustomFont[];
     contactMessages?: ContactMessage[];
     seoSettings?: SEOSettings;
     revisions?: RevisionSnapshot[];
@@ -244,6 +247,13 @@ export class CMSService {
       if (mData && mData.length > 0) {
         results.mediaAssets = mData as MediaAsset[];
         saveLocal(STORAGE_KEYS.MEDIA, mData);
+      }
+
+      // 12b. Custom Fonts
+      const { data: fontData } = await supabase.from('custom_fonts').select('*').order('created_at', { ascending: false });
+      if (fontData && fontData.length > 0) {
+        results.customFonts = fontData as CustomFont[];
+        saveLocal(STORAGE_KEYS.CUSTOM_FONTS, fontData);
       }
 
       // 13. Contact Messages (admin can read)
@@ -539,6 +549,48 @@ export class CMSService {
         }
       } catch (e) {
         console.error('Supabase media delete error:', e);
+      }
+    }
+  }
+
+  // --- CUSTOM FONTS ---
+  static getCustomFonts(): CustomFont[] {
+    return loadLocal<CustomFont[]>(STORAGE_KEYS.CUSTOM_FONTS, []);
+  }
+
+  static saveCustomFonts(fonts: CustomFont[]): void {
+    saveLocal(STORAGE_KEYS.CUSTOM_FONTS, fonts);
+  }
+
+  static async addCustomFontRemote(font: CustomFont): Promise<void> {
+    if (supabase) {
+      try {
+        await supabase.from('custom_fonts').insert(font);
+      } catch (e) {
+        console.error('Supabase custom font insert error:', e);
+      }
+    }
+  }
+
+  static async updateCustomFontRemote(id: string, updates: Partial<CustomFont>): Promise<void> {
+    if (supabase) {
+      try {
+        await supabase.from('custom_fonts').update(updates).eq('id', id);
+      } catch (e) {
+        console.error('Supabase custom font update error:', e);
+      }
+    }
+  }
+
+  static async deleteCustomFontRemote(id: string, storagePath?: string): Promise<void> {
+    if (supabase) {
+      try {
+        await supabase.from('custom_fonts').delete().eq('id', id);
+        if (storagePath) {
+          await supabase.storage.from('portfolio-media').remove([storagePath]);
+        }
+      } catch (e) {
+        console.error('Supabase custom font delete error:', e);
       }
     }
   }

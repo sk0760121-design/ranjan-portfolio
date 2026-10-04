@@ -80,7 +80,7 @@ export const AdminLayout: React.FC = () => {
     { id: 'media', label: 'MEDIA LIBRARY', icon: Image },
     { id: 'navigation', label: 'NAVIGATION & LINKS', icon: Navigation },
     { id: 'design', label: 'DESIGN & COLORS', icon: Palette },
-    { id: 'typography', label: 'TYPOGRAPHY', icon: Type },
+    { id: 'typography', label: 'TYPOGRAPHY & FONTS', icon: Type },
     { id: 'animations', label: 'ANIMATIONS', icon: Zap },
     { id: 'seo', label: 'SEO & METADATA', icon: Globe },
     { id: 'revisions', label: 'REVISIONS / BACKUPS', icon: History },
