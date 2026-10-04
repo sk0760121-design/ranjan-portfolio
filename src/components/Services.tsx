@@ -1,11 +1,11 @@
 import React from 'react';
 import { useCMS } from '../context/CMSContext';
+import { ArrowUpRight } from 'lucide-react';
 
 export const Services: React.FC = () => {
   const { sections, services, settings } = useCMS();
   const servicesSection = sections.services;
   const content = servicesSection?.content || {};
-  const theme = settings.theme;
 
   const enabledServices = services
     .filter((s) => s.enabled)
@@ -16,69 +16,65 @@ export const Services: React.FC = () => {
   return (
     <section
       id="services"
-      className="relative w-full bg-[#0A0A0A] border-t border-[#262626]/40"
-      style={{
-        paddingTop: `clamp(60px, 8vw, ${theme.design.sectionSpacingDesktop})`,
-        paddingBottom: `clamp(60px, 8vw, ${theme.design.sectionSpacingDesktop})`,
-      }}
+      className="relative w-full bg-[#0A0A0A] border-t border-[#1C1C1C] py-28 md:py-36"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20 pb-12 border-b border-[#222222]">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-6 h-[2px] bg-[#FF2027]" />
-              <span className="text-xs uppercase tracking-[0.2em] text-[#8A8A8A] font-semibold">
-                WHAT I OFFER
+              <span className="w-6 h-[1.5px] bg-[#FF2027]" />
+              <span className="text-[11px] uppercase tracking-[0.25em] text-[#8A8A8A] font-mono font-semibold">
+                EXPERTISE & CRAFT
               </span>
             </div>
-            <h2
-              className="font-black text-white leading-none tracking-tighter uppercase"
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: `clamp(${theme.typography.h2.fontSizeMobile}, 5vw, ${theme.typography.h2.fontSizeDesktop})`,
-              }}
-            >
+            <h2 className="font-section-heading section-heading-text text-white tracking-tight uppercase">
               {content.heading || 'SERVICES'}
             </h2>
           </div>
 
-          <p className="max-w-md text-[#8A8A8A] text-sm md:text-base leading-relaxed">
+          <p className="max-w-md text-[#8A8A8A] text-sm md:text-base leading-relaxed font-normal">
             {content.subheading ||
-              'Every genre requires an individual rhythm and cadence. Here is how I elevate your video projects.'}
+              'Every genre requires an individual rhythm and cadence. Here is how I elevate your video productions.'}
           </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Editorial Services List */}
+        <div className="divide-y divide-[#222222] border-y border-[#222222]">
           {enabledServices.map((service) => (
             <div
               key={service.id}
-              className="group relative p-8 bg-[#151515] border border-[#262626] rounded-md flex flex-col justify-between hover:border-[#FF2027]/60 transition-all duration-300 hover:shadow-xl hover:shadow-[#FF2027]/5"
+              className="group py-10 md:py-14 transition-all duration-300 hover:bg-white/[0.015] px-2 sm:px-6"
             >
-              <div>
-                <div className="flex items-baseline justify-between mb-8">
-                  <span className="font-mono text-xs text-[#FF2027] tracking-widest font-bold">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-baseline">
+                {/* Number */}
+                <div className="md:col-span-2">
+                  <span className="font-mono text-sm sm:text-base text-[#666666] group-hover:text-[#FF2027] transition-colors font-bold">
                     {service.number}
                   </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#262626] group-hover:bg-[#FF2027] transition-colors" />
                 </div>
 
-                <h3
-                  className="text-xl font-bold uppercase tracking-tight text-white mb-4 group-hover:text-[#FF2027] transition-colors"
-                  style={{ fontFamily: 'var(--font-heading)' }}
-                >
-                  {service.title}
-                </h3>
+                {/* Title */}
+                <div className="md:col-span-5">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white uppercase tracking-tight group-hover:text-[#FF2027] group-hover:translate-x-1 transition-all duration-300">
+                    {service.title}
+                  </h3>
+                </div>
 
-                <p className="text-sm text-[#8A8A8A] leading-relaxed">
-                  {service.description}
-                </p>
-              </div>
+                {/* Description & Action */}
+                <div className="md:col-span-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <p className="text-xs sm:text-sm text-[#8A8A8A] leading-relaxed max-w-sm">
+                    {service.description}
+                  </p>
 
-              <div className="mt-8 pt-4 border-t border-[#262626]/40 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#8A8A8A] group-hover:text-white transition-colors">
-                <span>INQUIRE FOR THIS</span>
-                <span className="text-[#FF2027]">→</span>
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-[#666666] group-hover:text-white transition-colors shrink-0 font-button"
+                  >
+                    <span>INQUIRE</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-[#FF2027] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+                </div>
               </div>
             </div>
           ))}

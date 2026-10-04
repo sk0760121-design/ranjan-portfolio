@@ -3,6 +3,7 @@ import { Monitor, Tablet, Smartphone, ExternalLink, X, RefreshCw } from 'lucide-
 import { Hero } from '../../components/Hero';
 import { Intro } from '../../components/Intro';
 import { SelectedWork } from '../../components/SelectedWork';
+import { StoriesMarquee } from '../../components/StoriesMarquee';
 import { Results } from '../../components/Results';
 import { Services } from '../../components/Services';
 import { Skills } from '../../components/Skills';
@@ -115,7 +116,7 @@ export const LivePreviewPane: React.FC<LivePreviewPaneProps> = ({
           <Hero onOpenShowreel={() => {}} />
           <Intro />
           <SelectedWork onSelectProject={() => {}} />
-          <Results />
+          <StoriesMarquee />
           <Services />
           <Skills />
           <Software />

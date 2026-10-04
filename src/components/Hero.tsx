@@ -62,47 +62,54 @@ export const Hero: React.FC<HeroProps> = ({ onOpenShowreel }) => {
         {/* Top Tagline / Category Label */}
         <div className="mb-6 flex items-center gap-3">
           <span className="w-8 h-[2px] bg-[#FF2027]" />
-          <span className="text-xs uppercase tracking-[0.25em] text-[#8A8A8A] font-semibold">
-            {content.tagline || 'VIDEO EDITOR · FILMMAKER · STORYTELLER'}
+          <span className="text-xs uppercase tracking-[0.25em] text-[#8A8A8A] font-semibold font-mono">
+            {content.tagline || 'VIDEO EDITOR • CINEMATIC STORYTELLER'}
           </span>
         </div>
 
         {/* Hero Title */}
-        <h1 className="font-hero-heading hero-title-text text-white max-w-5xl">
+        <h1 className="font-hero-heading hero-title-text text-white max-w-5xl leading-[0.96] tracking-tight">
           {content.headingLine1 || 'I EDIT'}{' '}
           <span className="block">{content.headingLine2 || 'STORIES THAT'}</span>
           <span className="block">
-            {content.headingLine3 || 'MAKE PEOPLE'}{' '}
+            {content.headingLine3 || 'PEOPLE'}{' '}
             <span className="text-[#FF2027]">
-              {content.headingHighlight || 'STOP SCROLLING.'}
+              {content.headingHighlight || 'REMEMBER.'}
             </span>
           </span>
         </h1>
 
         {/* Supporting Copy */}
-        <p className="font-hero-subtitle hero-subtitle-text mt-8 text-[#8A8A8A] max-w-xl">
+        <p className="font-hero-subtitle hero-subtitle-text mt-8 text-[#A0A0A0] max-w-2xl leading-relaxed">
           {content.supportingCopy ||
-            "I'm Ranjan Kumar, a video editor focused on cinematic storytelling, engaging short-form content and polished visual experiences."}
+            'Professional video editing focused on cinematic storytelling, retention, emotion and visual impact.'}
         </p>
 
         {/* CTA Buttons */}
         <div className="mt-10 flex flex-wrap items-center gap-4 sm:gap-6 font-button">
+          <a
+            href="#work"
+            className="btn-text inline-flex items-center gap-2.5 px-8 py-4 rounded bg-[#FF2027] text-white hover:bg-[#E0181F] transition-all duration-300 shadow-xl shadow-[#FF2027]/25 hover:scale-[1.02] cursor-pointer font-bold tracking-wider"
+          >
+            <span>{content.secondaryButtonText || 'VIEW MY WORK'}</span>
+            <ArrowDown className="w-4 h-4 text-white" />
+          </a>
+
           <button
             onClick={onOpenShowreel}
             data-cursor="PLAY"
-            className="btn-text inline-flex items-center gap-3 px-7 py-4 rounded bg-[#FF2027] text-white hover:bg-[#E0181F] transition-all duration-300 shadow-xl shadow-[#FF2027]/25 hover:scale-[1.02] cursor-pointer"
+            className="btn-text inline-flex items-center gap-2.5 px-8 py-4 rounded text-white border border-[#262626] bg-[#0A0A0A]/60 backdrop-blur hover:border-[#FF2027] hover:bg-[#151515] transition-all duration-300 cursor-pointer font-bold tracking-wider"
           >
             <Play className="w-4 h-4 fill-white" />
             <span>{content.primaryButtonText || 'WATCH SHOWREEL'}</span>
-            <ArrowUpRight className="w-4 h-4" />
           </button>
 
           <a
-            href={content.secondaryButtonUrl || '#work'}
-            className="btn-text inline-flex items-center gap-2 px-6 py-4 rounded text-white border border-[#262626] bg-[#0A0A0A]/40 backdrop-blur hover:border-[#FF2027] hover:bg-[#151515] transition-all duration-300"
+            href="#contact"
+            className="btn-text inline-flex items-center gap-1.5 px-6 py-4 text-[#8A8A8A] hover:text-white transition-colors cursor-pointer text-xs uppercase tracking-widest font-mono"
           >
-            <span>{content.secondaryButtonText || 'VIEW MY WORK'}</span>
-            <ArrowDown className="w-4 h-4 text-[#8A8A8A]" />
+            <span>LET&apos;S WORK TOGETHER</span>
+            <ArrowUpRight className="w-4 h-4 text-[#FF2027]" />
           </a>
         </div>
       </div>

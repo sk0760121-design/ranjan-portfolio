@@ -36,3 +36,40 @@
   background: #FF2027;
 }
 
+/* Continuous infinite right-to-left marquee */
+@keyframes marquee-scroll-rtl {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.marquee-track-rtl {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-scroll-rtl var(--marquee-duration, 32s) linear infinite;
+}
+
+.marquee-track-rtl.pause-hover:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track-rtl {
+    animation: none !important;
+    width: auto !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory;
+  }
+}
+
+

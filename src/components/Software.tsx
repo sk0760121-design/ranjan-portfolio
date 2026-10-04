@@ -1,12 +1,11 @@
 import React from 'react';
 import { useCMS } from '../context/CMSContext';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Wrench } from 'lucide-react';
 
 export const Software: React.FC = () => {
-  const { sections, software, settings } = useCMS();
+  const { sections, software } = useCMS();
   const softwareSection = sections.software;
   const content = softwareSection?.content || {};
-  const theme = settings.theme;
 
   const enabledSoftware = software
     .filter((s) => s.enabled)
@@ -17,42 +16,35 @@ export const Software: React.FC = () => {
   return (
     <section
       id="software"
-      className="relative w-full bg-[#0A0A0A] border-t border-[#262626]/40"
-      style={{
-        paddingTop: `clamp(60px, 8vw, ${theme.design.sectionSpacingDesktop})`,
-        paddingBottom: `clamp(60px, 8vw, ${theme.design.sectionSpacingDesktop})`,
-      }}
+      className="relative w-full bg-[#070707] border-t border-[#1C1C1C] py-28 md:py-36"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-12 border-b border-[#222222]">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-6 h-[2px] bg-[#FF2027]" />
-              <span className="text-xs uppercase tracking-[0.2em] text-[#8A8A8A] font-semibold">
-                APPLICATIONS
+              <span className="w-6 h-[1.5px] bg-[#FF2027]" />
+              <span className="text-[11px] uppercase tracking-[0.25em] text-[#8A8A8A] font-mono font-semibold">
+                STUDIO PRODUCTION SUITE
               </span>
             </div>
-            <h2
-              className="font-black text-white leading-none tracking-tighter uppercase"
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: `clamp(${theme.typography.h2.fontSizeMobile}, 5vw, ${theme.typography.h2.fontSizeDesktop})`,
-              }}
-            >
-              {content.heading || 'TOOLKIT'}
+            <h2 className="font-section-heading section-heading-text text-white tracking-tight uppercase">
+              {content.heading || 'TOOLKIT & SOFTWARE'}
             </h2>
           </div>
 
-          <p className="max-w-md text-[#8A8A8A] text-sm md:text-base leading-relaxed">
-            {content.subheading || 'Industry standard tools calibrated for speed and color accuracy.'}
+          <p className="max-w-md text-[#8A8A8A] text-sm md:text-base leading-relaxed font-normal">
+            {content.subheading ||
+              'Calibrated workflow optimized for speed, precision timeline cutting, high-end node color grading and immersive soundscapes.'}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 6-Item Toolkit Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {enabledSoftware.map((item) => (
             <div
               key={item.id}
-              className="p-6 bg-[#151515] border border-[#262626] rounded-md flex flex-col justify-between hover:border-[#FF2027]/70 transition-all group"
+              className="p-8 bg-[#0F0F0F] border border-[#222222] rounded-2xl flex flex-col justify-between hover:border-[#FF2027]/60 transition-all duration-300 group hover:shadow-xl hover:shadow-[#FF2027]/5"
             >
               <div>
                 <div className="flex items-center justify-between mb-6">
@@ -60,10 +52,10 @@ export const Software: React.FC = () => {
                     <img
                       src={item.logo_url}
                       alt={item.name}
-                      className="w-10 h-10 object-contain filter brightness-90 group-hover:brightness-100 transition-all"
+                      className="w-10 h-10 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
                     />
                   ) : (
-                    <div className="w-10 h-10 rounded bg-[#262626] flex items-center justify-center font-bold text-white text-sm">
+                    <div className="w-10 h-10 rounded-lg bg-[#1F1F1F] flex items-center justify-center font-bold text-white text-xs font-mono">
                       {item.name.substring(0, 2).toUpperCase()}
                     </div>
                   )}
@@ -73,7 +65,7 @@ export const Software: React.FC = () => {
                       href={item.website_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#8A8A8A] hover:text-white transition-colors"
+                      className="text-[#666666] hover:text-white transition-colors"
                       aria-label={item.name}
                     >
                       <ExternalLink className="w-4 h-4" />
@@ -81,15 +73,20 @@ export const Software: React.FC = () => {
                   )}
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FF2027] transition-colors">
+                <h3 className="text-xl font-bold uppercase tracking-tight text-white mb-2 group-hover:text-[#FF2027] transition-colors">
                   {item.name}
                 </h3>
 
                 {item.description && (
-                  <p className="text-xs text-[#8A8A8A] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#8A8A8A] leading-relaxed font-normal">
                     {item.description}
                   </p>
                 )}
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-[#1C1C1C] flex items-center justify-between text-[11px] font-mono text-[#666666]">
+                <span className="text-emerald-400">● Mastered Tool</span>
+                <span>Calibrated 4K</span>
               </div>
             </div>
           ))}

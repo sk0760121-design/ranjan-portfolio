@@ -42,6 +42,7 @@ import { MediaLibrary } from './pages/MediaLibrary';
 import { NavigationEditor } from './pages/NavigationEditor';
 import { DesignEditor } from './pages/DesignEditor';
 import { TypographyEditor } from './pages/TypographyEditor';
+import { StoriesEditor } from './pages/StoriesEditor';
 import { AnimationEditor } from './pages/AnimationEditor';
 import { SEOEditor } from './pages/SEOEditor';
 import { RevisionsEditor } from './pages/RevisionsEditor';
@@ -70,6 +71,7 @@ export const AdminLayout: React.FC = () => {
     { id: 'dashboard', label: 'DASHBOARD', icon: LayoutDashboard },
     { id: 'hero', label: 'HERO & SHOWREEL', icon: Sparkles },
     { id: 'work', label: 'SELECTED WORK', icon: Film },
+    { id: 'stories', label: 'STORIES / REELS MARQUEE', icon: Sparkles },
     { id: 'about', label: 'ABOUT RANJAN', icon: User },
     { id: 'services', label: 'SERVICES', icon: Briefcase },
     { id: 'skills', label: 'SKILLS & SOFTWARE', icon: Wrench },
@@ -112,6 +114,8 @@ export const AdminLayout: React.FC = () => {
         return <HeroEditor />;
       case 'work':
         return <WorkEditor />;
+      case 'stories':
+        return <StoriesEditor />;
       case 'about':
         return <AboutEditor />;
       case 'services':
